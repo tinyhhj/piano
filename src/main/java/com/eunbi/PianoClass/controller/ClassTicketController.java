@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 @RestController
+@RequestMapping(value = Constant.BASE_URL)
 public class ClassTicketController {
 
     @Autowired

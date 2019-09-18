@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 
 
 @RestController
+@RequestMapping(value = Constant.BASE_URL)
 public class LessonController {
     @Autowired
     ClassTicketRepository ticketRepository;
