@@ -1,16 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
+import {Route} from 'react-router-dom';
 import './App.css';
-import Navbar from "./Navbar";
-import ListGroup from "./ListGroup";
+import {Home, Students, Lessons, Tickets} from './pages';
 
 
 
 function App() {
   return (
     <div className="App">
-        <Navbar></Navbar>
-        <ListGroup></ListGroup>
+        <Route exact path = "/" component={Home}></Route>
+        <Route path = "/admin/students" component={Students}></Route>
+        <Route path = "/admin/lessons" component={Lessons}></Route>
+        <Route path = "/admin/tickets" component={Tickets}></Route>
     </div>
   );
 }

@@ -17,6 +17,11 @@ public class StudentController {
     @Autowired
     StudentRepository studentRepository;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getStudent(@PathVariable String id) {
+        return ResponseEntity.ok(studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("StudentId " + id + " not found")));
+    }
+
     @GetMapping
     public ResponseEntity<?> getAllStudents(Pageable pageable) {
         return ResponseEntity.ok(studentRepository.findAll(pageable));

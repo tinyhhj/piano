@@ -18,7 +18,7 @@ public class Student extends AuditModel {
     private String id;
 
     @NotNull
-    @Size(max = 32)
+    @Size(max = 32, min = 2)
     private String name;
     private int age;
 
