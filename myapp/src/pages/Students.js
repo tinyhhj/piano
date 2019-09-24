@@ -1,6 +1,7 @@
 import React, {useEffect , useState, useContext} from 'react';
 import {ListGroup, Button, ButtonGroup} from 'react-bootstrap';
 import {Header, Modal, Context} from '../components';
+import {StudentApi} from '../api';
 
 import './Students.css';
 
@@ -19,7 +20,7 @@ const Students = () => {
     };
     console.log('render... Students', students, show, mode, std);
 
-    useEffect(()=>{
+    useEffect(() => {
         getStudents();
     },[]);
 
@@ -27,25 +28,28 @@ const Students = () => {
         type:'student',
         mode: mode,
         show: show,
-        onHide: () => {
-            getStudents();
-        },
+        onHide: ()=>{getStudents()},
         std: std
     };
 
-    async function deleteStudent(id) {
-        const url = new URL(`/api/v1/students/${id}`,host);
-        await fetch(url, {method:'delete'});
-        getStudents();
-
-    }
-    async function getStudents() {
-        const url = new URL('/api/v1/students', host);
-        const response = await fetch(url);
-        const students = await response.json();
+    // async function deleteStudent(id) {
+    //     const url = new URL(`/api/v1/students/${id}`,host);
+    //     await fetch(url, {method:'delete'});
+    //     getStudents();
+    // }
+    const deleteStudent = id => StudentApi.deleteStudent(host, id, getStudents);
+    const getStudents = () =>StudentApi.getStudents(host, renderStudent);
+    const renderStudent = students=> {
         setShow(false);
-        setStudents(students.content);
+        setStudents(students);
     }
+    // async function getStudents() {
+    //     const url = new URL('/api/v1/students', host);
+    //     const response = await fetch(url);
+    //     const students = await response.json();
+    //     setShow(false);
+    //     setStudents(students.content);
+    // }
     return (
         <div className="content">
         <Header onClick={()=>modalOpen('create')}></Header>

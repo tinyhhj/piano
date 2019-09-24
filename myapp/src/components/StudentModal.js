@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {Context} from "./index";
+import {Calendar} from 'react-calendar';
 const StudentModal = ({mode,std, onHide,test}) => {
     const host = useContext(Context);
     const [email, setEmail] = useState('');

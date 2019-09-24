@@ -30,7 +30,7 @@ public class ClassTicket extends AuditModel{
     @ManyToOne(fetch = FetchType.LAZY, optional =false)
     @JoinColumn(name="student_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     Student student;
 
     public ClassTicket() {

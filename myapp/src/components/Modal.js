@@ -1,10 +1,12 @@
 import React  from 'react';
 import { Modal } from 'react-bootstrap';
 import StudentModal from './StudentModal';
+import TicketModal from './TicketModal';
 
 const modal = ({show, onHide, type,...props}) => {
     const modals = {
-        'student' : StudentModal
+        'student' : StudentModal,
+        'ticket': TicketModal
     }
     const ModalContent = modals[type];
     if( !ModalContent) {

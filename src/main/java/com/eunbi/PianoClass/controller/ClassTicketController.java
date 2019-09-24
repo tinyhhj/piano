@@ -5,6 +5,7 @@ import com.eunbi.PianoClass.domain.ClassTicket;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
 import com.eunbi.PianoClass.repository.ClassTicketRepository;
 import com.eunbi.PianoClass.repository.StudentRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,11 @@ public class ClassTicketController {
 
     @Autowired
     StudentRepository studentRepository;
+
+    @GetMapping("/tickets")
+    public ResponseEntity<?> getAllTickets(Pageable pageable) {
+        return ResponseEntity.ok(ticketRepository.findAll(pageable));
+    }
 
     @GetMapping("/students/{studentId}/tickets")
     public ResponseEntity<?> getAllTicketsByStudentId(@PathVariable String studentId, Pageable pageable) {
@@ -60,7 +66,8 @@ public class ClassTicketController {
         }).orElseThrow(()->new ResourceNotFoundException("studentId " + studentId+ " ticketId " + id + " not found"));
     }
 
+    @Data
     public static class TicketCreateReq {
-
+        LocalDate start = LocalDate.now();
     }
 }
