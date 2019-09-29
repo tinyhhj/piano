@@ -1,54 +1,90 @@
 import React, {useState, useEffect , useContext}from 'react';
-import {Header, Context, Modal} from "../components";
-import {Table} from 'react-bootstrap';
+import {Header, Context, Modal, CommonUtil} from "../components";
+import {Button, ButtonGroup, Table} from 'react-bootstrap';
 import {TicketApi} from '../api';
 
 
-const Tickets = () => {
+const Tickets = ({student, ticketHandler}) => {
+    const logger = CommonUtil.log;
+    logger.debug('ticket student', student);
     const host = useContext(Context);
     const [ tickets , setTickets] = useState([]);
     const [ show , setShow] = useState(false);
+    const [mode , setMode] = useState('create');
+    const [ticket, setTicket] = useState(null);
 
-    useEffect(()=>{ getTickets()},[]);
+    useEffect(()=>{
+        if( student) {
+            handleTicketClick(null);
+            getTickets(student.id);
+        }},[student]);
     const renderTickets = tickets => {
         setShow(false);
         setTickets(tickets);
+        const selectedTicket = ticket || tickets[0];
+        logger.debug('selectedTicket: ',selectedTicket);
+        handleTicketClick(selectedTicket);
+
+    };
+    const getTickets = studentId=>TicketApi.getTickets(host,{studentId}, renderTickets);
+    const handleTicketClick = ticket => {
+        ticketHandler(ticket);
+        setTicket(ticket);
     }
-    const getTickets = ()=>TicketApi.getTickets(host, renderTickets);
-    // async function getTickets() {
-    //     const response = await fetch('/api/v1/tickets', host).then(res=>res.json());
-    //     setTickets(response);
-    // }
+
     const openModal = (mode,ticket)=>{
+        if( !student) {
+            throw new Error('학생을 먼저 선택해주세요.');
+        }
         setShow(true);
-        modalConfig.mode = mode;
-        modalConfig.ticket = ticket;
+        setMode(mode);
+        setTicket(ticket);
     }
     const modalConfig = {
         type:'ticket',
-        mode: 'create',
+        mode: mode,
         show: show,
-        onHide: ()=>getTickets(),
-    }
-
+        onHide: ()=>{
+            getTickets(student.id)
+        },
+        ticket: ticket,
+        student: student
+    };
+    const isActive = Boolean(student);
     return (
+
         <div className="content">
-            <Header onClick={e=>openModal('create')}/>
+            <Header
+                disabled={!isActive}
+                onClick={isActive? e=>openModal('create', null) : null}/>
             <Table striped bordered hover variant={"dark"}>
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>이름</th>
-                        <th>기한</th>
+                        <th>시작</th>
+                        <th>종료</th>
                     </tr>
                 </thead>
                 <tbody>
                 {tickets.length > 0 &&
                 tickets.map((ticket,i)=> {
-                    return (<tr>
+                    return (<tr key={ticket.id} onClick={e=> handleTicketClick(ticket)}>
                         <td>{i+1}</td>
                         <td>{ticket.student.name}</td>
-                        <td>{`${ticket.start} - ${ticket.end}`}</td>
+                        <td>{`${ticket.start}`}</td>
+                        <td>{`${ticket.end}`}</td>
+                        <td>
+                            <ButtonGroup aria-label="Basic example">
+                                <Button variant="secondary" onClick={e=>{
+                                    e.stopPropagation();
+                                    openModal('update', ticket);
+                                }}>수정</Button>
+                                <Button variant="secondary" onClick={e=>{
+                                    e.stopPropagation();
+                                }}>삭제</Button>
+                            </ButtonGroup>
+                        </td>
                     </tr>);
                 })}
                 </tbody>

@@ -66,7 +66,7 @@ public class LessonController {
     public static class LessonCreateReq {
         String memo = "";
         boolean finish = false;
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+        @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime lessonDate = LocalDateTime.now();
     }
 }

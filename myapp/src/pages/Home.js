@@ -1,12 +1,38 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import {Container, Row, Col} from 'react-bootstrap';
+import Students from './Students';
+import Tickets from './Tickets';
+import Lessons from './Lessons';
+
 
 const Home = () => {
+    const [student , setStudent] = useState(null);
+    const [ticket, setTicket] = useState(null);
+
+    const studentHandler = student =>{
+        setStudent(student);
+    }
+    const ticketHandler = ticket => {
+        setTicket(ticket);
+    }
+
     return (
-        <div>
-            <h2>
-                홈
-            </h2>
-        </div>
+        <Container>
+            <Row>
+                <Col>
+                    <Students studentHandler = {studentHandler}></Students>
+                </Col>
+                <Col>
+                    <Tickets student={student}
+                             ticketHandler={ticketHandler}
+                    ></Tickets>
+                </Col>
+                <Col>
+                    <Lessons ticket={ticket}></Lessons>
+                </Col>
+            </Row>
+
+        </Container>
     )
 };
 

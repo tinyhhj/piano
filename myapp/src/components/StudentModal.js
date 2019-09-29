@@ -2,16 +2,16 @@ import React, {useState, useEffect, useContext} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {Context} from "./index";
 import {Calendar} from 'react-calendar';
-const StudentModal = ({mode,std, onHide,test}) => {
+const StudentModal = ({mode,student, onHide,test}) => {
     const host = useContext(Context);
     const [email, setEmail] = useState('');
     const [name,  setName] = useState('');
     useEffect(()=>{
         if(mode === 'update' || mode === 'read') {
-            getStudent(std);
+            getStudent(student.id);
         }
     },[]);
-    console.log('modal', 'mode', mode, 'std',std,'name',name,'test',test);
+    console.log('modal', 'mode', mode, 'std',student.id,'name',name,'test',test);
 
     async function addStudents() {
         var url = new URL('/api/v1/students', host),
@@ -24,12 +24,26 @@ const StudentModal = ({mode,std, onHide,test}) => {
     const handleSubmit = e =>  {
         e.preventDefault();
         if( mode === 'create') {
+            verifyName();
+            verifyEmail();
             addStudents();
         }
         else if( mode === 'update') {
-            updateStudent(std);
+            verifyName();
+            verifyEmail();
+            updateStudent(student.id);
         }
     };
+
+    const verifyName = ()=> {
+        if( name.length < 2) {
+            throw new Error("name should be not empty");
+        }
+    }
+
+    const verifyEmail= () => {
+
+    }
 
     async function updateStudent(id) {
         var url = new URL(`/api/v1/students/${id}`, host);
@@ -72,13 +86,13 @@ const StudentModal = ({mode,std, onHide,test}) => {
                 <Form.Group controlId="formEmail">
                     <Form.Label>이메일: </Form.Label>
                     <Form.Control type={'email'}
-                                  placeholder={'jomalbong@google.com'}
+                                  placeholder={mode !=='read'?'jomalbong@google.com': ''}
                                   onChange={handleMailChange}
                                   value={email}
                                   disabled={mode === 'read'? true : false}
                     />
                 </Form.Group>
-                <Button type={"submit"}>{mode === 'update'? '수정':'저장'}</Button>
+                {mode !== 'read' && <Button type={"submit"}>{mode === 'update'? '수정':'저장'}</Button>}
             </Form>
         </>
     );
