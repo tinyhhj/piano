@@ -11,7 +11,7 @@ const StudentModal = ({mode,student, onHide,test}) => {
             getStudent(student.id);
         }
     },[]);
-    console.log('modal', 'mode', mode, 'std',student.id,'name',name,'test',test);
+    console.log('modal', 'mode', mode, 'std',student && student.id,'name',name,'test',test);
 
     async function addStudents() {
         var url = new URL('/api/v1/students', host),

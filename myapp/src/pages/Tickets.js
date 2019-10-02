@@ -6,7 +6,7 @@ import {TicketApi} from '../api';
 
 const Tickets = ({student, ticketHandler}) => {
     const logger = CommonUtil.log;
-    logger.debug('ticket student', student);
+
     const host = useContext(Context);
     const [ tickets , setTickets] = useState([]);
     const [ show , setShow] = useState(false);
@@ -15,14 +15,15 @@ const Tickets = ({student, ticketHandler}) => {
 
     useEffect(()=>{
         if( student) {
+            logger.debug('ticket student', student);
             handleTicketClick(null);
             getTickets(student.id);
         }},[student]);
     const renderTickets = tickets => {
         setShow(false);
         setTickets(tickets);
+        logger.debug('selectedTicket: ',ticket, tickets[0]);
         const selectedTicket = ticket || tickets[0];
-        logger.debug('selectedTicket: ',selectedTicket);
         handleTicketClick(selectedTicket);
 
     };

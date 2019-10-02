@@ -9,7 +9,8 @@ async function getTickets(host, {studentId}, cb=()=>{}) {
     const url = new URL(`/api/v1/students/${studentId}/tickets`,host);
     const response = await fetch(url).then(res=>res.json());
     cb(response.content);
-    return response.content;}
+    return response.content;
+}
 async function addTicket(host,{studentId,startDate},cb = ()=>{}) {
     const url = new URL(`/api/v1/students/${studentId}/tickets`, host);
     const response = await fetch(url, {method: 'post',
