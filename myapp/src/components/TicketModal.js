@@ -8,7 +8,8 @@ import Svg from 'react-svg';
 const TicketModal = ({mode,student, onHide ,ticket}) => {
     console.log(`render ticketmodal... ${mode}`)
     const host = useContext(Context);
-    const [date, setDate] = useState(mode !== 'create'? ticket.start :CommonUtil.getDate(new Date()));
+    const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString();
+    const [date, setDate] = useState(mode !== 'create'? ticket.start :today.substring(0,10));
     const [endDate, setEndDate] = useState(ticket?ticket.end : '');
     const handleSubmit = e=>{
         e.preventDefault();

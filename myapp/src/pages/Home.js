@@ -19,10 +19,10 @@ const Home = () => {
     return (
         <Container>
             <Row>
-                <Col>
+                <Col xs={2}>
                     <Students studentHandler = {studentHandler}></Students>
                 </Col>
-                <Col>
+                <Col xs={4}>
                     <Tickets student={student}
                              ticketHandler={ticketHandler}
                     ></Tickets>

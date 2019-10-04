@@ -4,7 +4,7 @@ import StudentModal from './StudentModal';
 import TicketModal from './TicketModal';
 import LessonModal from './LessonModal';
 
-const modal = ({show, onHide, type,...props}) => {
+const modal = ({show, onHide, type, size,...props}) => {
     const modals = {
         'student' : StudentModal,
         'ticket': TicketModal,
@@ -16,7 +16,10 @@ const modal = ({show, onHide, type,...props}) => {
     }
     console.log( 'modal props:' ,props);
     return(
-        <Modal show={show} onHide={onHide} centered>
+        <Modal show={show}
+               onHide={onHide}
+               size={size ? size : 'sm'}
+               centered>
             <ModalContent {...props} onHide={onHide} test={Math.random()}></ModalContent>
         </Modal>
     );

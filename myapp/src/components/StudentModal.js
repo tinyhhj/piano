@@ -66,7 +66,13 @@ const StudentModal = ({mode,student, onHide,test}) => {
 
     return (
         <>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton onClick={e=>{
+                e.stopPropagation();
+                console.log('clicked',e.target,e.target.parentElement, document.querySelector('.modal-header button.close'),e.target === document.querySelector('.modal-header button.close'));
+                if(e.target === document.querySelector('.modal-header button.close') || e.target.parentElement === document.querySelector('.modal-header button.close')) {
+                    onHide();
+                }
+            }}>
                 <Modal.Title>
                     {mode === 'read' && '학생 조회'}
                     {mode === 'update' && '학생 수정'}

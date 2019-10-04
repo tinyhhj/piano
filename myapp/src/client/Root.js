@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter} from "react-router-dom";
 import Navbar from "../Navbar";
 import App from '../App.js'
-const host = React.createContext('http://localhost:8080');
+const host = React.createContext('http://172.30.1.4:8080');
 
 
 const Root = () => {

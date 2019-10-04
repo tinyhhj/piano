@@ -2,6 +2,7 @@ import React,{useState, useContext,useEffect} from 'react';
 import {Container, Row, Col, Button} from 'react-bootstrap';
 import {Context,Header,Modal,CommonUtil} from '../components';
 import {LessonApi} from '../api';
+import './Lessons.css'
 
 const Lessons = ({ticket}) => {
     const logger = CommonUtil.log;
@@ -25,7 +26,7 @@ const Lessons = ({ticket}) => {
         }
         setShow(true);
         setMode(mode);
-        setLesson(lesson);
+        handleLessonClicked(lesson);
     };
     const handleLessonClicked = lesson => {
         setLesson(lesson);
@@ -42,7 +43,8 @@ const Lessons = ({ticket}) => {
         show: show,
         onHide: ()=>getLessons(ticket.id),
         lesson: lesson,
-        ticket: ticket
+        ticket: ticket,
+        size: 'lg'
     };
 
     const finishCode = {
@@ -51,7 +53,7 @@ const Lessons = ({ticket}) => {
     }
 
     return(
-       <Container>
+       <Container id={'lesson-container'}>
            <Row>
                <Button variant={"primary"}
                        onClick={isActive? ()=>openModal('create',null) : null}
@@ -63,13 +65,23 @@ const Lessons = ({ticket}) => {
                <Col>수업일자</Col>
                <Col>수업완료</Col>
                <Col>메모</Col>
+               <Col>#</Col>
            </Row>
-           {lessons.length  && lessons.map((lesson,idx)=>(
-               <Row key={lesson.id}>
+           {lessons.length > 0 && lessons.map((lesson,idx)=>(
+               <Row key={lesson.id}
+                    onClick={e=>openModal('read', lesson)}>
                    <Col>{idx}</Col>
-                   <Col>{lesson.lessonDate}</Col>
+                   <Col>{lesson.lessonDate.replace('T',' ')}</Col>
                    <Col>{finishCode[lesson.finish]}</Col>
                    <Col>{lesson.memo}</Col>
+                   <Col>
+                       <Button variant={'primary'}
+                               onClick={e=>{
+                                   e.stopPropagation();
+                                   openModal('update', lesson);
+                               }}
+                       >수정</Button>
+                   </Col>
                </Row>
            ))}
            <Modal {...modalConfig}></Modal>

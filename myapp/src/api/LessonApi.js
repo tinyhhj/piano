@@ -14,6 +14,15 @@ async function addLesson(host, {ticketId, lessonDate, memo },cb=()=>{}) {
     return response.content;
 }
 
+async function updateLesson(host, {ticketId, lessonId, ...lesson}, cb=()=>{}) {
+    const url = new URL(`/api/v1/tickets/${ticketId}/lessons/${lessonId}`,host);
+    Object.keys(lesson).forEach(k=>url.searchParams.append(k,lesson[k]));
+    const response = await fetch(url, {method: 'put'}).then(res=>res.json());
+    cb(response.content);
+    return response.content;
+
+}
 
 
-export default { getLessons, addLesson};
+
+export default { getLessons, addLesson,updateLesson};

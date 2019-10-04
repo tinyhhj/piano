@@ -1,0 +1,6 @@
+#lesson-container .col {
+  border: 1px solid #dee2e6;
+}
+#lesson-container .row:nth-of-type(2n+3) {
+  background-color: rgba(0,0,0,.05);
+ }
