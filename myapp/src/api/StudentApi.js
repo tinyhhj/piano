@@ -1,3 +1,4 @@
+import fetch from "./FetchWrapper";
 
 async function getStudents(host,cb = ()=>{}) {
     const url = new URL('/api/v1/students', host);

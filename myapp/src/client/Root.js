@@ -1,16 +1,19 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { BrowserRouter} from "react-router-dom";
+import {Container} from 'react-bootstrap';
 import Navbar from "../Navbar";
 import App from '../App.js'
-const host = React.createContext('http://172.30.1.4:8080');
-
+import {Spinner} from '../components';
 
 const Root = () => {
     return (
-            <BrowserRouter>
-                <Navbar></Navbar>
-                <App></App>
-            </BrowserRouter>);
+        <Container>
+                <BrowserRouter>
+                    <Navbar></Navbar>
+                    <App></App>
+                </BrowserRouter>
+            <Spinner></Spinner>
+        </Container>);
 }
 
 export default Root;

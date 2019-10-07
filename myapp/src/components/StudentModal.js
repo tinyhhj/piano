@@ -4,7 +4,7 @@ import {Context} from "./index";
 import {Calendar} from 'react-calendar';
 const StudentModal = ({mode,student, onHide,test}) => {
     const host = useContext(Context);
-    const [email, setEmail] = useState('');
+    const [login, setLogin] = useState('');
     const [name,  setName] = useState('');
     useEffect(()=>{
         if(mode === 'update' || mode === 'read') {
@@ -15,7 +15,7 @@ const StudentModal = ({mode,student, onHide,test}) => {
 
     async function addStudents() {
         var url = new URL('/api/v1/students', host),
-            params = {name: name, email: email};
+            params = {name: name, login: login};
         Object.keys(params).forEach(k => url.searchParams.append(k,params[k]))
         const response = await fetch(url, {method: 'post'})
             .then(res=>res.json());
@@ -25,12 +25,12 @@ const StudentModal = ({mode,student, onHide,test}) => {
         e.preventDefault();
         if( mode === 'create') {
             verifyName();
-            verifyEmail();
+            verifyLogin();
             addStudents();
         }
         else if( mode === 'update') {
             verifyName();
-            verifyEmail();
+            verifyLogin();
             updateStudent(student.id);
         }
     };
@@ -41,7 +41,7 @@ const StudentModal = ({mode,student, onHide,test}) => {
         }
     }
 
-    const verifyEmail= () => {
+    const verifyLogin= () => {
 
     }
 
@@ -54,14 +54,15 @@ const StudentModal = ({mode,student, onHide,test}) => {
 
     async function getStudent(id) {
         var url = new URL(`/api/v1/students/${id}`, host);
-        const {name , email} = await fetch(url).then(res=>res.json());
-        console.log('getStudent',name, email);
+        const {name , login} = await fetch(url).then(res=>res.json());
+        console.log('getStudent',name, login);
         setName(name);
-        // setEmail(email);
+        setLogin(login);
+        // setlogin(login);
     }
 
     const handleNameChange = e => {setName(e.target.value);};
-    const handleMailChange = e => setEmail(e.target.value);
+    const handleLoginChange = e => setLogin(e.target.value);
 
 
     return (
@@ -89,12 +90,12 @@ const StudentModal = ({mode,student, onHide,test}) => {
                                   disabled={mode === 'read'? true : false}
                     />
                 </Form.Group>
-                <Form.Group controlId="formEmail">
-                    <Form.Label>이메일: </Form.Label>
-                    <Form.Control type={'email'}
-                                  placeholder={mode !=='read'?'jomalbong@google.com': ''}
-                                  onChange={handleMailChange}
-                                  value={email}
+                <Form.Group controlId="formLogin">
+                    <Form.Label>로그인: </Form.Label>
+                    <Form.Control type={'text'}
+                                  placeholder={mode !=='read'?'jomalbong': ''}
+                                  onChange={handleLoginChange}
+                                  value={login}
                                   disabled={mode === 'read'? true : false}
                     />
                 </Form.Group>

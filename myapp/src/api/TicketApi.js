@@ -1,3 +1,5 @@
+import fetch from "./FetchWrapper";
+
 async function getAllTickets(host, cb =()=>{}) {
     const url = new URL('/api/v1/tickets', host);
     const response = await fetch(url).then(res=>res.json());

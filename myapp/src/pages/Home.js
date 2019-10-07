@@ -3,9 +3,11 @@ import {Container, Row, Col} from 'react-bootstrap';
 import Students from './Students';
 import Tickets from './Tickets';
 import Lessons from './Lessons';
+import {Spinner} from '../components';
 
 
 const Home = () => {
+    const [show , setShow] = useState(false);
     const [student , setStudent] = useState(null);
     const [ticket, setTicket] = useState(null);
 
@@ -18,6 +20,7 @@ const Home = () => {
 
     return (
         <Container>
+            {show && <Spinner></Spinner>}
             <Row>
                 <Col xs={2}>
                     <Students studentHandler = {studentHandler}></Students>
@@ -31,7 +34,6 @@ const Home = () => {
                     <Lessons ticket={ticket}></Lessons>
                 </Col>
             </Row>
-
         </Container>
     )
 };

@@ -1,3 +1,5 @@
+import fetch from "./FetchWrapper";
+
 async function getLessons(host, ticketId, cb = ()=>{}) {
     const url = new URL(`/api/v1/tickets/${ticketId}/lessons`, host);
     const response = await fetch(url).then(res=>res.json());
