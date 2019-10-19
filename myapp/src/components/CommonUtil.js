@@ -33,5 +33,17 @@ const log = ((level = 'debug')=> {
     }
 })();
 
-export default {log, getDate};
+function addDay(date, days) {
+    const from = new Date(date);
+    from.setDate(from.getDate() + days);
+    return from;
+}
+
+function addHour(date, hours) {
+    const from = new Date(date);
+    from.setHours(from.getHours() + hours);
+    return from;
+}
+
+export default {log, getDate, appendZero, addDay};
 

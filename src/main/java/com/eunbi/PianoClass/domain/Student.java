@@ -1,16 +1,18 @@
 package com.eunbi.PianoClass.domain;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Table(name = "students")
+@Table(name = "students",
+        uniqueConstraints={
+                @UniqueConstraint(
+                        columnNames={"login"}
+                )
+        })
 public class Student extends AuditModel {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -21,6 +23,11 @@ public class Student extends AuditModel {
     @Size(max = 32, min = 2)
     private String name;
     private int age;
+
+    @NotNull
+    @Size(max = 32, min = 2)
+    private String login;
+    private String password;
 
 
     public String getId() {
@@ -47,5 +54,27 @@ public class Student extends AuditModel {
         this.age = age;
     }
 
+    public String getLogin() {
+        return login;
+    }
 
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Student(@NotNull @Size(max = 32, min = 2) String name, @NotNull @Size(max = 32, min = 2) String login) {
+        this.name = name;
+        this.login = login;
+    }
+
+    public Student() {
+    }
 }

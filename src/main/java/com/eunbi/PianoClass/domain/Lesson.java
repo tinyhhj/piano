@@ -5,6 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import javax.persistence.*;
 import java.time.Instant;
