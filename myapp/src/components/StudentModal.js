@@ -1,17 +1,17 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {Context} from "./index";
-import {Calendar} from 'react-calendar';
+import StudentApi from "../api/StudentApi";
 const StudentModal = ({mode,student, onHide,test}) => {
     const host = useContext(Context);
     const [login, setLogin] = useState('');
     const [name,  setName] = useState('');
     useEffect(()=>{
         if(mode === 'update' || mode === 'read') {
-            getStudent(student.id);
+            StudentApi.getStudent(host, student.id, renderStudent);
         }
     },[]);
-    console.log('modal', 'mode', mode, 'std',student && student.id,'name',name,'test',test);
+    console.log('modal', 'mode', mode, 'std',student && student.id,'name',name,'test',test, 'login',login);
 
     async function addStudents() {
         var url = new URL('/api/v1/students', host),
@@ -31,9 +31,14 @@ const StudentModal = ({mode,student, onHide,test}) => {
         else if( mode === 'update') {
             verifyName();
             verifyLogin();
-            updateStudent(student.id);
+            StudentApi.updateStudent(host,{id:student.id,name: name},onHide);
         }
     };
+
+    function renderStudent(student) {
+        setLogin(student.login);
+        setName(student.name);
+    }
 
     const verifyName = ()=> {
         if( name.length < 2) {
@@ -45,24 +50,10 @@ const StudentModal = ({mode,student, onHide,test}) => {
 
     }
 
-    async function updateStudent(id) {
-        var url = new URL(`/api/v1/students/${id}`, host);
-        url.searchParams.append('name', name);
-        await fetch(url, {method:'put'}).then(res=>res.json());
-        onHide();
-    }
 
-    async function getStudent(id) {
-        var url = new URL(`/api/v1/students/${id}`, host);
-        const {name , login} = await fetch(url).then(res=>res.json());
-        console.log('getStudent',name, login);
-        setName(name);
-        setLogin(login);
-        // setlogin(login);
-    }
 
     const handleNameChange = e => {setName(e.target.value);};
-    const handleLoginChange = e => setLogin(e.target.value);
+    const handleLoginChange = e => {setLogin(e.target.value);};
 
 
     return (

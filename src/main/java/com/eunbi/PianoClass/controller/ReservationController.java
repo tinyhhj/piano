@@ -65,7 +65,9 @@ public class ReservationController {
 
     @DeleteMapping("/students/{studentId}/reservations/{id}")
     ResponseEntity<?> deleteReservation(@PathVariable String studentId, @PathVariable String id) {
-        reservationRepository.deleteById(id);
+        Reservation reservation = Optional.ofNullable(reservationRepository.findByStudentIdAndId(studentId, id))
+                .orElseThrow(()->new ResourceNotFoundException("not found reservation studentId: "+ studentId + " reservationId: " +id));
+        reservationRepository.deleteById(reservation.getId());
         return ResponseEntity.ok(null);
     }
 
@@ -73,8 +75,8 @@ public class ReservationController {
     ResponseEntity<?> getAllReservations() {
         LocalDate now = LocalDate.now();
         DayOfWeek dow = now.getDayOfWeek();
-        LocalDateTime start = now.plusDays(DayOfWeek.MONDAY.getValue() - dow.getValue()).atStartOfDay();
-        LocalDateTime end = now.plusDays(DayOfWeek.SUNDAY.getValue() - dow.getValue()+1).atStartOfDay();
+        LocalDateTime start = now.plusDays(DayOfWeek.MONDAY.getValue() - dow.getValue()).atTime(6,0);
+        LocalDateTime end = now.plusDays(DayOfWeek.SUNDAY.getValue() - dow.getValue()+1).atTime(5,59);
         User user = Optional.ofNullable(UserUtil.getUser())
                 .orElseThrow(()->new UnAuthorizationException("unAuthorization"));
         List<Reservation> reservations = reservationRepository.findAllByReservationTimeBetween(start,end);
@@ -91,9 +93,10 @@ public class ReservationController {
     }
     @Data
     public static class ReservationCreateReq {
-        int halfHours = 1;
+        int halfHours = 2;
         @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime reservationTime = LocalDateTime.now();
+        String memo;
     }
 
     @Data

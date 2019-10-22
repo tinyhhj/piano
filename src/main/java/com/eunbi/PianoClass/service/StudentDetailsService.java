@@ -17,6 +17,6 @@ public class StudentDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Student student = studentRepository.findByLogin(s).orElseThrow(()->new UsernameNotFoundException("user can not find " + s));
-        return new User(student.getLogin(), student.getPassword(), AuthorityUtils.createAuthorityList("STUDENT"));
+        return new StudentDetails(student.getLogin(), student.getPassword(), AuthorityUtils.createAuthorityList("STUDENT"),student);
     }
 }

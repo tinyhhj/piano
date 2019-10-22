@@ -10,6 +10,7 @@ export default function mNavbar() {
                     <Nav.Link href="/admin/students">학생관리</Nav.Link>
                     <Nav.Link href="/admin/tickets">수강관리</Nav.Link>
                     <Nav.Link href="/admin/lessons">수업관리</Nav.Link>
+                    <Nav.Link href="/students/reservations">연습실 예약</Nav.Link>
                     {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown">*/}
                     {/*    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
                     {/*    <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}

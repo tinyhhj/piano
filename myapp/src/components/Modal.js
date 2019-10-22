@@ -8,7 +8,7 @@ const modal = ({show, onHide, type, size,...props}) => {
     const modals = {
         'student' : StudentModal,
         'ticket': TicketModal,
-        'lesson': LessonModal
+        'lesson': LessonModal,
     }
     const ModalContent = modals[type];
     if( !ModalContent) {

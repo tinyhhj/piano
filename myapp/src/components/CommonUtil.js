@@ -28,8 +28,8 @@ const log = ((level = 'debug')=> {
 
     return {
         debug: (...msg)=> logLevel[level] <= logLevel['debug'] ? console.log.apply(console, msg): null,
-        info: msg=> logLevel[level] <= logLevel['info'] ? console.log.apply(console, msg): null,
-        error: msg=> logLevel[level] <= logLevel['error'] ? console.log.apply(console, msg): null,
+        info: (...msg)=> logLevel[level] <= logLevel['info'] ? console.log.apply(console, msg): null,
+        error: (...msg)=> logLevel[level] <= logLevel['error'] ? console.log.apply(console, msg): null,
     }
 })();
 
@@ -45,5 +45,18 @@ function addHour(date, hours) {
     return from;
 }
 
-export default {log, getDate, appendZero, addDay};
+function toISOString(date) {
+    return new Date(date - new Date().getTimezoneOffset() * 60000).toISOString();
+}
+
+Date.prototype.atStartOfDay = function() {
+    const startOfDay = new Date(this);
+    startOfDay.setHours(0);
+    startOfDay.setMinutes(0);
+    startOfDay.setSeconds(0);
+    startOfDay.setMilliseconds(0);
+    return startOfDay;
+}
+
+export default {log, getDate, appendZero, addDay,toISOString, addHour};
 

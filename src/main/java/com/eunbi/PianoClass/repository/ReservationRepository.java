@@ -9,4 +9,6 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, String> {
     List<Reservation> findAllByStudentId(String studentId);
     List<Reservation> findAllByReservationTimeBetween(LocalDateTime start, LocalDateTime end);
+    Reservation findByStudentIdAndId(String studentId, String id);
+    void deleteByStudentIdAndId(String studentId, String id);
 }

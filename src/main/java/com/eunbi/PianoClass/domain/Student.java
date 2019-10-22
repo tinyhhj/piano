@@ -77,4 +77,8 @@ public class Student extends AuditModel {
 
     public Student() {
     }
+
+    public void clearPassword() {
+        setPassword(null);
+    }
 }

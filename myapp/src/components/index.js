@@ -4,4 +4,5 @@ export { default as Context } from './Context';
 export { default as CommonUtil} from './CommonUtil';
 export { default as Spinner} from './Spinner';
 export { default as Slot} from './ReservationSlot';
+export { default as Toast , toast} from './Toast';
 

@@ -1,14 +1,17 @@
 package com.eunbi.PianoClass.controller;
 
 import com.eunbi.PianoClass.common.CommonAssert;
+import com.eunbi.PianoClass.common.util.UserUtil;
 import com.eunbi.PianoClass.constant.Constant;
 import com.eunbi.PianoClass.domain.Student;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
 import com.eunbi.PianoClass.repository.StudentRepository;
+import com.eunbi.PianoClass.service.StudentDetails;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
@@ -71,7 +74,11 @@ public class StudentController {
         }).orElseThrow(() -> new ResourceNotFoundException("StudentId " + id + " not found"));
     }
 
-
+    @GetMapping("/me")
+    public ResponseEntity<?> whoami() {
+        StudentDetails details = (StudentDetails) UserUtil.getUser();
+        return ResponseEntity.ok(details.getStudent());
+    }
 
     @Data
     public static class StudentCreateReq {
