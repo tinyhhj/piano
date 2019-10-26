@@ -1,0 +1,24 @@
+version '3'
+
+services:
+  piano_mysql:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: piano
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306:3306
+    volumes:
+      - piano_volume:/var/lib/mysql
+
+
+  piano_application:
+    build: .
+    expose:
+      - 8080
+    depends_on:
+      - piano_mysql
+
+volumes:
+  piano_volume:
