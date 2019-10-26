@@ -28,7 +28,7 @@ public class Student extends AuditModel {
     @Size(max = 32, min = 2)
     private String login;
     private String password;
-
+    private String role = "STUDENT";
 
     public String getId() {
         return id;
@@ -80,5 +80,13 @@ public class Student extends AuditModel {
 
     public void clearPassword() {
         setPassword(null);
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

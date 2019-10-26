@@ -15,8 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/teacher").setViewName("forward:/index.html");
         registry.addViewController("/").setViewName("forward:/index.html");
-        registry.addViewController("/students/reservations").setViewName("forward:/index.html");
     }
 
 

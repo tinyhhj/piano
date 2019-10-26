@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-
+import './Toast.css';
 export default class Toast extends React.Component {
     constructor(props){
         super(props);
@@ -33,8 +32,8 @@ export default class Toast extends React.Component {
 
     componentDidUpdate() {
         if(this.state.show ) {
-            $(ReactDOM.findDOMNode(this)).animate({top: '0px' , opacity: '1'});
-            setTimeout(this.hide , 3000);
+            // $(ReactDOM.findDOMNode(this)).animate({top: '0px' , opacity: '1'});
+            // setTimeout(this.hide , 3000);
         }
     }
 
@@ -43,7 +42,7 @@ export default class Toast extends React.Component {
     }
 
     hide() {
-        $(ReactDOM.findDOMNode(this)).animate({top: '-60px' , opacity:'0'});
+        // $(ReactDOM.findDOMNode(this)).animate({top: '-60px' , opacity:'0'});
         // setTimeout(()=>this.setState({show : false , type : '' , message: '' }) , 3000);
     }
 
@@ -53,10 +52,11 @@ export default class Toast extends React.Component {
         const {type ,
               show ,
                 message,} = this.state;
+        const motion = show ? 'slidedown' : 'slideup';
         if( show ) { style = {...style , display: 'block'}}
         if( type === 'warning' ) { style.backgroundColor = 'red'}
 
-        return <div style={style}>
+        return <div id={'toast-box'} style={style} className={motion}>
             <span >{message}</span>
         </div>;
     }

@@ -6,6 +6,7 @@ const StudentModal = ({mode,student, onHide,test}) => {
     const host = useContext(Context);
     const [login, setLogin] = useState('');
     const [name,  setName] = useState('');
+    const [teacher, setTeacher] = useState(false);
     useEffect(()=>{
         if(mode === 'update' || mode === 'read') {
             StudentApi.getStudent(host, student.id, renderStudent);

@@ -4,12 +4,14 @@ import com.eunbi.PianoClass.common.CommonAssert;
 import com.eunbi.PianoClass.common.util.UserUtil;
 import com.eunbi.PianoClass.constant.Constant;
 import com.eunbi.PianoClass.domain.Student;
+import com.eunbi.PianoClass.exception.InvalidRequestException;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
 import com.eunbi.PianoClass.repository.StudentRepository;
 import com.eunbi.PianoClass.service.StudentDetails;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.querydsl.binding.OptionalValueBinding;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -18,6 +20,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value= Constant.BASE_STUDENT_URL)
@@ -48,8 +54,11 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createStudent(StudentCreateReq req){
+    public ResponseEntity<?> createStudent(@Valid StudentCreateReq req){
         Student student = new Student();
+        // 로그인 중복체크
+        studentRepository.findByLogin(req.getLogin())
+                .ifPresent(con->{throw new InvalidRequestException("login is exist: ".concat(req.getLogin()));});
         student.setName(req.getName());
         student.setLogin(req.getLogin());
         student.setPassword(req.getPassword());
@@ -82,7 +91,11 @@ public class StudentController {
 
     @Data
     public static class StudentCreateReq {
+        @NotNull
+        @Size(min=2)
         String name;
+        @NotNull
+        @Size(min=2)
         String login;
         String password = passwordEncoder.encode("0000");
     }

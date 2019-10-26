@@ -1,23 +1,20 @@
-import React from 'react';
+import React,{useState, useEffect, useContext} from 'react';
 import { Navbar, Nav} from 'react-bootstrap';
+import StudentApi from "./api/StudentApi";
+import {Context} from "./components";
+export default ()=> {
+    const host = useContext(Context);
+    const [student, setStudent] = useState(null);
+    useEffect(()=>{
+        StudentApi.whoami(host,setStudent);
+    },[])
 
-export default function mNavbar() {
     return (<Navbar bg="light" expand="lg">
             <Navbar.Brand href="/">조은비 교실</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    <Nav.Link href="/admin/students">학생관리</Nav.Link>
-                    <Nav.Link href="/admin/tickets">수강관리</Nav.Link>
-                    <Nav.Link href="/admin/lessons">수업관리</Nav.Link>
-                    <Nav.Link href="/students/reservations">연습실 예약</Nav.Link>
-                    {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown">*/}
-                    {/*    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
-                    {/*    <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}
-                    {/*    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>*/}
-                    {/*    <NavDropdown.Divider />*/}
-                    {/*    <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
-                    {/*</NavDropdown>*/}
+                    {student && student.role === 'TEACHER' && <Nav.Link href="/teacher">학생관리</Nav.Link>}
                 </Nav>
                 {/*<Form inline>*/}
                 {/*    <FormControl type="text" placeholder="Search" className="mr-sm-2" />*/}

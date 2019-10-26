@@ -37,7 +37,7 @@ const Students = ({studentHandler}) => {
     const getStudents = () => StudentApi.getStudents(host, renderStudent);
     const renderStudent = students=> {
         setShow(false);
-        setStudents(students);
+        setStudents(students.filter(student=>student.role !== 'TEACHER'));
         const selectStduent = student || students[0];
         handleStudentClick(selectStduent);
     }

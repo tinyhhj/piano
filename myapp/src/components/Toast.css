@@ -1,0 +1,29 @@
+
+.slidedown {
+  animation-duration: 1s;
+  animation-name: slidedown;
+}
+
+.slideup{
+  animation-duration: 1s;
+  animation-name: slideup;
+}
+
+@keyframes slideup {
+  from {
+    margin-top: 0%;
+  }
+  to {
+    margin-top: -100%;
+  }
+
+}
+@keyframes slidedown {
+  from {
+    margin-top: -100%;
+  }
+  to {
+    margin-top: 0%;
+  }
+}
+
