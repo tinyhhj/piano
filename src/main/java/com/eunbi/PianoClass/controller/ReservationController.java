@@ -45,7 +45,7 @@ public class ReservationController {
 
     @PostMapping("/students/{studentId}/reservations")
     ResponseEntity<?> makeReservation(@PathVariable String studentId, ReservationCreateReq req) {
-        log.info("[{}] {}","reservation", req.toString());
+        log.info("[{}] [{}] [{}] - req: {}","reservation",UserUtil.getUser().getUsername(), "create", req.toString());
         //중복체크
         LocalDateTime start = req.getReservationTime();
         LocalDateTime end = start.plusMinutes(59);
@@ -79,6 +79,7 @@ public class ReservationController {
 
     @DeleteMapping("/students/{studentId}/reservations/{id}")
     ResponseEntity<?> deleteReservation(@PathVariable String studentId, @PathVariable String id) {
+        log.debug("[{}] [{}] [{}] - studentId: {} reservationId: {}","reservation",UserUtil.getUser().getUsername(),"delete", studentId, id);
         Reservation reservation = Optional.ofNullable(reservationRepository.findByStudentIdAndId(studentId, id))
                 .orElseThrow(()->new ResourceNotFoundException("not found reservation studentId: "+ studentId + " reservationId: " +id));
         reservationRepository.deleteById(reservation.getId());
@@ -89,9 +90,10 @@ public class ReservationController {
     ResponseEntity<?> getAllReservations() {
         LocalDate now = LocalDate.now();
         LocalDateTime start = now.atTime(6,0);
-        LocalDateTime end = now.plusDays(6).atTime(5,59);
+        LocalDateTime end = now.plusDays(7).atTime(5,59);
         User user = Optional.ofNullable(UserUtil.getUser())
                 .orElseThrow(()->new UnAuthorizationException("unAuthorization"));
+        log.debug("[{}] [{}] [{}] - from: {} to: {}","reservation",UserUtil.getUser().getUsername(),"find", start, end);
         List<Reservation> reservations = reservationRepository.findAllByReservationTimeBetween(start,end);
         reservations = reservations
                 .stream()
