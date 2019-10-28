@@ -17,14 +17,14 @@ public class CommonLoggingFilter extends CommonsRequestLoggingFilter {
     @Override
     protected void beforeRequest(HttpServletRequest request, String message) {
         executionTime.set(System.currentTimeMillis());
-        log.debug("### start time: {}", executionTime.get());
-        super.beforeRequest(request, message);
+//        log.debug("### start time: {}", executionTime.get());
+//        super.beforeRequest(request, message);
     }
 
     @Override
     protected void afterRequest(HttpServletRequest request, String message) {
         long runningTime = System.currentTimeMillis() - executionTime.get();
-        log.debug("### end time : {}", System.currentTimeMillis());
+//        log.debug("### end time : {}", System.currentTimeMillis());
         log.debug("### running time: {}", runningTime);
         super.afterRequest(request, message);
     }

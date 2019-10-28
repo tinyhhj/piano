@@ -9,25 +9,22 @@ const Reservations = () => {
     const [ student, setStudent] = useState({});
     const appendZero = CommonUtil.appendZero;
     const addDays = CommonUtil.addDay;
-    const today = new Date();
+    const today = new Date().atStartOfDay();
     const day = 24 * 60 * 60 * 1000;
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - ((today.getDay()? today.getDay(): 7) - 1));
-    const sunday = new Date(today);
-    sunday.setDate(today.getDate() + (7 - (today.getDay()?today.getDay():7)));
     const logger = CommonUtil.log;
-    const thisWeeks = [...Array(7)].map((v,i)=>CommonUtil.addDay(monday.atStartOfDay(),i));
+    const thisWeeks = [...Array(7)].map((v,i)=>CommonUtil.addDay(today,i));
+    const weekNames = ['일요일','월요일', '화요일','수요일','목요일','금요일','토요일'];
 
     const renderReservations = reservations =>setReservations(reservations);
     const getReservations = ()=>ReservationApi.getReservations(host, renderReservations);
-    const getReservationsInHour = hr => reservations
+    const getReservationsInHour = day => reservations
         .find(reservation=> {
             // 시간대에 예약들만 가져옴
             const dateInfo = reservation.reservationTime.split(/[^0-9]/);
             const start =  new Date(dateInfo[0], dateInfo[1]-1, dateInfo[2],dateInfo[3]);
             const end =  CommonUtil.addHour(start, 1);
             // if( start <= hr && hr < end) alert('filtered'.concat(start.toString(), '\n', end.toString(),'\n', hr,'\n' , reservation.reservationTime));
-            return start <= hr && hr < end;
+            return start <= day && day < end;
         });
 
     useEffect(()=>{
@@ -49,7 +46,7 @@ const Reservations = () => {
             const hr = hour++;
             return oneRow(hr,
                 [...thisWeeks]
-                    .map(day=> CommonUtil.addHour(day.atStartOfDay(),hr))
+                    .map(day=> CommonUtil.addHour(day,hr))
                     .map(day=>getReservationsInHour(day)));
         });
     const convertReservationTime = datetime => {
@@ -84,20 +81,15 @@ const Reservations = () => {
             <thead>
             <tr>
                 <td></td>
-                {new Array(7).fill('').map((v,i)=>{
-                    const from = addDays(monday,i);
-                return <th key={from}>{`${appendZero(from.getMonth()+1)}-${appendZero(from.getDate())}`}</th>
-                })}
+                {
+                    thisWeeks.map((v,i)=><th key={v}>{`${appendZero(v.getMonth()+1)}-${appendZero(v.getDate())}`}</th>)
+                }
             </tr>
             <tr>
             <td></td>
-            <th>월요일</th>
-            <th>화요일</th>
-            <th>수요일</th>
-            <th>목요일</th>
-            <th>금요일</th>
-            <th>토요일</th>
-            <th>일요일</th>
+                {
+                    thisWeeks.map((v,i)=><th key={i}>{weekNames[v.getDay()]}</th>)
+                }
             </tr>
         </thead>
             <tbody onClick={clickHandler} >

@@ -5,11 +5,13 @@ import com.eunbi.PianoClass.common.CommonAssert;
 import com.eunbi.PianoClass.common.util.UserUtil;
 import com.eunbi.PianoClass.constant.Constant;
 import com.eunbi.PianoClass.domain.Reservation;
+import com.eunbi.PianoClass.exception.InvalidRequestException;
 import com.eunbi.PianoClass.exception.UnAuthorizationException;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
 import com.eunbi.PianoClass.repository.ReservationRepository;
 import com.eunbi.PianoClass.repository.StudentRepository;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping(value = Constant.BASE_URL)
 public class ReservationController {
@@ -41,6 +45,16 @@ public class ReservationController {
 
     @PostMapping("/students/{studentId}/reservations")
     ResponseEntity<?> makeReservation(@PathVariable String studentId, ReservationCreateReq req) {
+        log.info("[{}] {}","reservation", req.toString());
+        //중복체크
+        LocalDateTime start = req.getReservationTime();
+        LocalDateTime end = start.plusMinutes(59);
+        Optional.ofNullable(reservationRepository.findAllByReservationTimeBetween(start,end))
+                .ifPresent(reservations->{
+                    if( reservations.size() > 0) {
+                        throw new InvalidRequestException("reservation is already exist" + start);
+                    }
+                });
         return studentRepository.findById(studentId).map( student -> {
                     Reservation newReservation = new Reservation();
                     newReservation.setDuration(Duration.ofMinutes(30 * req.getHalfHours()));
@@ -74,9 +88,8 @@ public class ReservationController {
     @GetMapping("/students/reservations")
     ResponseEntity<?> getAllReservations() {
         LocalDate now = LocalDate.now();
-        DayOfWeek dow = now.getDayOfWeek();
-        LocalDateTime start = now.plusDays(DayOfWeek.MONDAY.getValue() - dow.getValue()).atTime(6,0);
-        LocalDateTime end = now.plusDays(DayOfWeek.SUNDAY.getValue() - dow.getValue()+1).atTime(5,59);
+        LocalDateTime start = now.atTime(6,0);
+        LocalDateTime end = now.plusDays(6).atTime(5,59);
         User user = Optional.ofNullable(UserUtil.getUser())
                 .orElseThrow(()->new UnAuthorizationException("unAuthorization"));
         List<Reservation> reservations = reservationRepository.findAllByReservationTimeBetween(start,end);
@@ -97,6 +110,8 @@ public class ReservationController {
         @DateTimeFormat(iso= DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime reservationTime = LocalDateTime.now();
         String memo;
+
+
     }
 
     @Data

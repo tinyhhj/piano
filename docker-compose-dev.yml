@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  piano_mysql_test:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: piano_test
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: tinyhhj
+      MYSQL_PASSWORD: Samsung*99
+    ports:
+      - 3306:3306
+    volumes:
+      - volume_test:/var/lib/mysql
+
+
+  piano_application_test:
+    build: .
+    ports:
+      - 8081:8081
+    depends_on:
+      - piano_mysql_test
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://piano_mysql_test:3306/piano_test?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root 
+
+volumes:
+  volume_test:
