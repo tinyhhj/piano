@@ -22,8 +22,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/piano?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: r00t 
+      TZ: "Asia/Seoul"
     volumes:
       - volume_log:/logs
+      - /etc/localtime:/etc/localtime:ro
 volumes:
   volume_mysql:
   volume_log:

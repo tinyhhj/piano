@@ -12,6 +12,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: r00t 
       SPRING_PROFILES_ACTIVE: dev
+      TZ: Asia/Seoul
 
 volumes:
   volume_log_dev:
