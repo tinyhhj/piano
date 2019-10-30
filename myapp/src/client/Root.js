@@ -8,7 +8,7 @@ import {Spinner, Toast} from '../components';
 const Root = () => {
     return (
         <Container>
-                <BrowserRouter>
+                <BrowserRouter basename={'/piano'}>
                     <Navbar></Navbar>
                     <App></App>
                 </BrowserRouter>

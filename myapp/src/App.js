@@ -8,7 +8,7 @@ import {Home, Students, Lessons, Tickets , Reservations} from './pages';
 function App() {
   return (
     <div className="App">
-        <Route exact path = "/" component={Reservations}></Route>
+        <Route exact path = {"/"} component={Reservations}></Route>
         <Route path = "/teacher" component={Home}></Route>
     </div>
   );
