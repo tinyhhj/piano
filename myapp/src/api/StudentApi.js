@@ -36,4 +36,14 @@ async function getStudent(host,id, cb=()=>{}) {
     // setlogin(login);
 }
 
-export default { getStudents, deleteStudent, whoami, updateStudent,getStudent};
+async function addStudent( host, {name,login}, cb=()=>{}) {
+    var url = new URL('/api/v1/students', host),
+        params = {name: name, login: login};
+    Object.keys(params).forEach(k => url.searchParams.append(k,params[k]))
+    const response = await fetch(url, {method: 'post'})
+        .then(res=>res.json());
+    cb(response);
+    return response;
+}
+
+export default { getStudents, deleteStudent, whoami, updateStudent,getStudent,addStudent};

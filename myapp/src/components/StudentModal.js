@@ -14,20 +14,15 @@ const StudentModal = ({mode,student, onHide,test}) => {
     },[]);
     console.log('modal', 'mode', mode, 'std',student && student.id,'name',name,'test',test, 'login',login);
 
-    async function addStudents() {
-        var url = new URL('/api/v1/students', host),
-            params = {name: name, login: login};
-        Object.keys(params).forEach(k => url.searchParams.append(k,params[k]))
-        const response = await fetch(url, {method: 'post'})
-            .then(res=>res.json());
-        onHide();
+    const addStudent = (name, login) =>{
+        StudentApi.addStudent(host,{name,login},()=>onHide());
     }
     const handleSubmit = e =>  {
         e.preventDefault();
         if( mode === 'create') {
             verifyName();
             verifyLogin();
-            addStudents();
+            addStudent();
         }
         else if( mode === 'update') {
             verifyName();

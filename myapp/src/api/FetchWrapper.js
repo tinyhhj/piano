@@ -4,13 +4,15 @@ export default function FetchWrapper(url , option) {
         method: 'GET',
         'Content-Type': 'application/json',
         credentials: 'include',
+        contextpath: '/piano',
         ...option
     };
+    url = new URL(defaultOption.contextpath + url.pathname, url.origin);
     // add();
     return fetch(url, defaultOption)
         .catch(e=>{
             console.log(`error handler: ${url} ,error: ${e}`);
-            toast.forEach(t=>t.show('warning',e))
+            // toast.forEach(t=>t.show('warning',e))
             throw e;
         })
         .finally(()=> {
