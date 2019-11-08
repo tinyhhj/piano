@@ -7,11 +7,12 @@ export default function FetchWrapper(url , option) {
         contextpath: '/piano',
         ...option
     };
-    url = new URL(defaultOption.contextpath + url.pathname, url.origin);
+    const newUrl = new URL(defaultOption.contextpath + url.pathname+ url.search, url.origin);
+
     // add();
-    return fetch(url, defaultOption)
+    return fetch(newUrl, defaultOption)
         .catch(e=>{
-            console.log(`error handler: ${url} ,error: ${e}`);
+            console.log(`error handler: ${newUrl} ,error: ${e}`);
             // toast.forEach(t=>t.show('warning',e))
             throw e;
         })

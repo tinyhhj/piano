@@ -46,6 +46,7 @@ public class ReservationController {
     @PostMapping("/students/{studentId}/reservations")
     ResponseEntity<?> makeReservation(@PathVariable String studentId, ReservationCreateReq req) {
         log.info("[{}] [{}] [{}] - req: {}","reservation",UserUtil.getUser().getUsername(), "create", req.toString());
+        CommonAssert.isTrue(req.getReservationTime().getMinute() == 0, "reservation should be start of hour");
         //중복체크
         LocalDateTime start = req.getReservationTime();
         LocalDateTime end = start.plusMinutes(59);

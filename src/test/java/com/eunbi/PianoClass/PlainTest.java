@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -105,5 +107,12 @@ public class PlainTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void test3() {
+        LocalDate now = LocalDate.now();
+        LocalDateTime start = now.atTime(6,0);
+        System.out.println(start);
     }
 }
