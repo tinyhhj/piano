@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  nginx:
+    build: 
+      context: ../docker/docker-nginx-webdav
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - /media/tinyhhj/HD-E1:/media/webdav
+    environment:
+      USERNAME: tinyhhj
+      PASSWORD: Samsung*99
+    depends_on:
+      - application
+
