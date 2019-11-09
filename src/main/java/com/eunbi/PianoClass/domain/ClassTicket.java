@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +23,9 @@ public class ClassTicket extends AuditModel{
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     private String id;
 
+    @NotNull
+    @Size(max=32)
+    private String name;
     @NotNull
     private LocalDate start;
     @NotNull
@@ -70,5 +74,13 @@ public class ClassTicket extends AuditModel{
 
     public void setStudent(Student student) {
         this.student = student;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

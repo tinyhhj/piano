@@ -13,19 +13,19 @@ async function getTickets(host, {studentId}, cb=()=>{}) {
     cb(response.content);
     return response.content;
 }
-async function addTicket(host,{studentId,startDate},cb = ()=>{}) {
+async function addTicket(host,{studentId,startDate,name},cb = ()=>{}) {
     const url = new URL(`/api/v1/students/${studentId}/tickets`, host);
-    const response = await fetch(url, {method: 'post',
-        body:`start=${encodeURIComponent(startDate)}`,
-        headers: {'content-type' : 'application/x-www-form-urlencoded'}
-    }).then(res=>res.json());
+    url.searchParams.append('start', startDate);
+    url.searchParams.append('name',name);
+    const response = await fetch(url, {method: 'post'}).then(res=>res.json());
     cb(response.content);
     return response.content;
 }
-async function updateTicket(host,{studentId, ticketId, startDate, endDate}, cb=()=>{}) {
+async function updateTicket(host,{studentId, ticketId,name, startDate, endDate}, cb=()=>{}) {
     const url = new URL(`/api/v1/students/${studentId}/tickets/${ticketId}`, host);
     url.searchParams.append('start', startDate);
     url.searchParams.append('end',endDate);
+    url.searchParams.append('name',name);
 
     const response = await fetch(url, {method: 'put'}).then(res=>res.json());
     cb(response.content);

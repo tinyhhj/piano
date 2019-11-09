@@ -9,6 +9,7 @@ const TicketModal = ({mode,student, onHide ,ticket}) => {
     console.log(`render ticketmodal... ${mode}`)
     const host = useContext(Context);
     const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString();
+    const [name, setName] = useState((ticket && ticket.name) ||today.substring(0,10));
     const [date, setDate] = useState(mode !== 'create'? ticket.start :today.substring(0,10));
     const [endDate, setEndDate] = useState(ticket?ticket.end : '');
     const handleSubmit = e=>{
@@ -23,8 +24,8 @@ const TicketModal = ({mode,student, onHide ,ticket}) => {
     };
     useEffect(()=>{
     },[]);
-    const addTicket = (studentId)=>TicketApi.addTicket(host,{studentId,startDate: date}, ()=>onHide());
-    const updateTicket = () => TicketApi.updateTicket(host, {studentId: ticket.student.id, ticketId: ticket.id, startDate: date, endDate: endDate}, ()=>onHide());
+    const addTicket = (studentId)=>TicketApi.addTicket(host,{studentId,startDate: date, name}, ()=>onHide());
+    const updateTicket = () => TicketApi.updateTicket(host, {studentId: ticket.student.id,name, ticketId: ticket.id, startDate: date, endDate: endDate}, ()=>onHide());
 
     const onChange = e => {
         setDate(e.target.value);
@@ -40,12 +41,20 @@ const TicketModal = ({mode,student, onHide ,ticket}) => {
                 </Modal.Title>
             </Modal.Header>
             <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group controlId="formName">
-                    <Form.Label>이름: </Form.Label>
+                <Form.Group controlId="forStudent">
+                    <Form.Label>학생: </Form.Label>
                     <Form.Control as="select"
                         disabled={true}>
                         <option value={student.id}>{student.name}</option>
                     </Form.Control>
+                </Form.Group>
+                <Form.Group controlId="formName">
+                    <Form.Label>수강증: </Form.Label>
+                    <Form.Control
+                    value={name}
+                    onChange={e=>setName(e.target.value)}
+                    disabled={mode === 'read'? true: false}
+                    />
                 </Form.Group>
                 <Form.Group controlId="formStart">
                     <Form.Label>수강 시작일자: </Form.Label>

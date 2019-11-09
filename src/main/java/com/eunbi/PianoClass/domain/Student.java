@@ -89,4 +89,8 @@ public class Student extends AuditModel {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public boolean isTeacher() {
+        return getRole().equalsIgnoreCase("TEACHER");
+    }
 }

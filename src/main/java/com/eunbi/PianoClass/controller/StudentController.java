@@ -50,7 +50,7 @@ public class StudentController {
 
     @GetMapping
     public ResponseEntity<?> getAllStudents(Pageable pageable) {
-        return ResponseEntity.ok(studentRepository.findAll(pageable));
+        return ResponseEntity.ok(studentRepository.findByRole(pageable, "STUDENT"));
     }
 
     @PostMapping

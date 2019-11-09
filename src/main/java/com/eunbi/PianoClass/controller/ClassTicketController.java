@@ -1,5 +1,6 @@
 package com.eunbi.PianoClass.controller;
 
+import com.eunbi.PianoClass.common.CommonAssert;
 import com.eunbi.PianoClass.constant.Constant;
 import com.eunbi.PianoClass.domain.ClassTicket;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
@@ -42,6 +43,7 @@ public class ClassTicketController {
         return studentRepository.findById(studentId).map(student-> {
             ClassTicket ticket = new ClassTicket();
             ticket.setStart(req.getStart());
+            ticket.setName(CommonAssert.nullSafeValue(req.getName(),()->req.getStart().toString()));
             ticket.setEnd(ticket.getStart().plus(Period.ofMonths(1)));
             ticket.setStudent(student);
             return ResponseEntity.ok(ticketRepository.save(ticket));
@@ -60,6 +62,7 @@ public class ClassTicketController {
 
         return ticketRepository.findById(id).map(ticket-> {
             // update
+            ticket.setName(CommonAssert.nullSafeValue(req.getName(),()->ticket.getName()));
             ticket.setStart(req.getStart());
             ticket.setEnd(req.getEnd());
             return ResponseEntity.ok(ticketRepository.save(ticket));
@@ -78,6 +81,7 @@ public class ClassTicketController {
     public static class TicketCreateReq {
         @DateTimeFormat(pattern = "yyyy-MM-dd")
         LocalDate start = LocalDate.now();
+        String name;
     }
 
     @Data
@@ -87,5 +91,7 @@ public class ClassTicketController {
 
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate end = LocalDate.now();
+
+        String name;
     }
 }

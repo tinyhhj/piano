@@ -1,18 +1,30 @@
 import React,{useState, useContext,useEffect} from 'react';
-import {Container, Row, Col, Button} from 'react-bootstrap';
+import {Container, Row, Col, Button, Dropdown} from 'react-bootstrap';
 import {Context,Header,Modal,CommonUtil} from '../components';
-import {LessonApi} from '../api';
+import {LessonApi, StudentApi,TicketApi} from '../api';
 import './Lessons.css'
 
-const Lessons = ({ticket}) => {
+const Lessons = () => {
     const logger = CommonUtil.log;
     const host = useContext(Context);
     const [lessons, setLessons] = useState([]);
     const [show , setShow] = useState(false);
     const [mode , setMode] = useState('create');
     const [lesson, setLesson] = useState(null);
+    const [ticket, setTicket] = useState(null);
+    const [tickets, setTickets] = useState([]);
+    const [student, setStudent] = useState(null);
+    const [students, setStudents] = useState([]);
     const isActive = Boolean(ticket);
-    logger.debug('lessons ticket: ', ticket);
+    const studentMap = students.reduce((acc,cur)=>{
+        acc[cur.id]=cur;
+        return acc;
+    },{});
+    const ticketMap = tickets.reduce((acc,cur)=>{
+        acc[cur.id]=cur;
+        return acc;
+    },{});
+    // logger.debug('lessons ticket: ', ticket);
     const lessonRender = lessons=> {
         setLessons(lessons);
         setShow(false);
@@ -20,6 +32,8 @@ const Lessons = ({ticket}) => {
         handleLessonClicked(selectedLesson);
     }
     const getLessons = ticketId=>setLessons(LessonApi.getLessons(host,ticketId, lessonRender));
+    const getStudents = ()=> StudentApi.getStudents(host, setStudents);
+    const getTickets = ()=>  TicketApi.getTickets(host,{studentId: student.id},setTickets);
     const openModal = (mode, lesson)=> {
         if(!ticket) {
             throw new Error('수강증을 먼저 선택해주세요.');
@@ -31,9 +45,20 @@ const Lessons = ({ticket}) => {
     const handleLessonClicked = lesson => {
         setLesson(lesson);
     }
+    useEffect(()=> {
+        getStudents();
+    },[]);
     useEffect(()=>{
-        if( ticket) {
+        if(student) {
+            setTicket(null);
+            getTickets();
+        }
+    },[student]);
+    useEffect(()=>{
+        if(ticket) {
             getLessons(ticket.id);
+        } else {
+            setLessons([]);
         }
     },[ticket]);
 
@@ -55,6 +80,22 @@ const Lessons = ({ticket}) => {
     return(
        <Container id={'lesson-container'}>
            <Row>
+               <Dropdown onSelect={(k,e)=>setStudent(studentMap[e.target.dataset.id])}>
+                   <Dropdown.Toggle variant="success" id="dropdown-basic">
+                       {(student && student.name) || '학생'}
+                   </Dropdown.Toggle>
+                   <Dropdown.Menu>
+                       {students.map(student=><Dropdown.Item key={student.id} data-id={student.id}>{student.name}</Dropdown.Item>)}
+                   </Dropdown.Menu>
+               </Dropdown>
+               <Dropdown onSelect={(k,e)=>setTicket(ticketMap[e.target.dataset.id])}>
+                   <Dropdown.Toggle variant="success" id="dropdown-basic">
+                       {(ticket && ticket.name) || '수강증'}
+                   </Dropdown.Toggle>
+                   <Dropdown.Menu>
+                       {tickets.map(ticket=><Dropdown.Item key={ticket.id} data-id={ticket.id}>{ticket.name}</Dropdown.Item>)}
+                   </Dropdown.Menu>
+               </Dropdown>
                <Button variant={"primary"}
                        onClick={isActive? ()=>openModal('create',null) : null}
                        disabled={isActive? false: true}

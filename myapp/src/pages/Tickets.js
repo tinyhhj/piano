@@ -13,7 +13,6 @@ const Tickets = ({ticketHandler}) => {
     const [ ticket, setTicket] = useState(null);
     const [student, setStudent] = useState(null);
     const [students, setStudents] = useState([]);
-    logger.debug('ticket state: ', ticket);
     useEffect(()=>{
         if(!students.length) {
             getStudents();
@@ -24,7 +23,7 @@ const Tickets = ({ticketHandler}) => {
             getTicketsOnChangeStudent(student.id);
         }
         },[student]);
-    const getStudents = ()=> StudentApi.getStudents(host, setStudents);
+    const getStudents = ()=> StudentApi.getStudents(host, students=>{setStudents(students); logger.debug(students)});
 
     const renderTickets = eventName => tickets => {
         setShow(false);
@@ -68,12 +67,12 @@ const Tickets = ({ticketHandler}) => {
             <Header
                 disabled={!isActive}
                 onClick={isActive? e=>openModal('create', null) : null}>
-                <Dropdown>
+                <Dropdown onSelect={(key,e)=>setStudent(students.filter(student=>student.id === e.target.dataset.id)[0])}>
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        학생
+                        {(student && student.name) || '학생'}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
-                        {students.map(student=><Dropdown.Item>{student.name}</Dropdown.Item>)}
+                        {students.map(student=><Dropdown.Item key={student.id} data-id={student.id}>{student.name}</Dropdown.Item>)}
                     </Dropdown.Menu>
                 </Dropdown>
             </Header>
@@ -92,7 +91,7 @@ const Tickets = ({ticketHandler}) => {
                 tickets.map((ticket,i)=> {
                     return (<tr key={ticket.id} onClick={e=> openModal('read',ticket)}>
                         <td>{i+1}</td>
-                        <td>{ticket.student.name}</td>
+                        <td>{ticket.name}</td>
                         <td>{`${ticket.start}`}</td>
                         <td>{`${ticket.end}`}</td>
                         <td>
