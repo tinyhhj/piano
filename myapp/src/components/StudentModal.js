@@ -22,7 +22,7 @@ const StudentModal = ({mode,student, onHide,test}) => {
         if( mode === 'create') {
             verifyName();
             verifyLogin();
-            addStudent();
+            addStudent(name,login);
         }
         else if( mode === 'update') {
             verifyName();

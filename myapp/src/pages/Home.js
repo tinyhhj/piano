@@ -7,7 +7,6 @@ import {Spinner} from '../components';
 
 
 const Home = () => {
-    const [show , setShow] = useState(false);
     const [student , setStudent] = useState(null);
     const [ticket, setTicket] = useState(null);
 
@@ -20,12 +19,9 @@ const Home = () => {
 
     return (
         <Container>
-            {show && <Spinner></Spinner>}
             <Row>
-                <Col xs={2}>
-                    <Students studentHandler = {studentHandler}></Students>
-                </Col>
-                <Col xs={4}>
+
+                <Col>
                     <Tickets student={student}
                              ticketHandler={ticketHandler}
                     ></Tickets>

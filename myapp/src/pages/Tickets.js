@@ -1,24 +1,30 @@
 import React, {useState, useEffect , useContext}from 'react';
 import {Header, Context, Modal, CommonUtil} from "../components";
-import {Button, ButtonGroup, Table} from 'react-bootstrap';
-import {TicketApi} from '../api';
+import {Button, ButtonGroup, Table,Dropdown} from 'react-bootstrap';
+import {TicketApi,StudentApi} from '../api';
 
 
-const Tickets = ({student, ticketHandler}) => {
+const Tickets = ({ticketHandler}) => {
     const logger = CommonUtil.log;
     const host = useContext(Context);
     const [ tickets , setTickets] = useState([]);
     const [ show , setShow] = useState(false);
     const [ mode , setMode] = useState('create');
     const [ ticket, setTicket] = useState(null);
+    const [student, setStudent] = useState(null);
+    const [students, setStudents] = useState([]);
     logger.debug('ticket state: ', ticket);
     useEffect(()=>{
+        if(!students.length) {
+            getStudents();
+        }
         if( student) {
             logger.debug('ticket student', student);
             // handleTicketClick(null);
             getTicketsOnChangeStudent(student.id);
-        }},[student]);
-
+        }
+        },[student]);
+    const getStudents = ()=> StudentApi.getStudents(host, setStudents);
 
     const renderTickets = eventName => tickets => {
         setShow(false);
@@ -54,12 +60,23 @@ const Tickets = ({student, ticketHandler}) => {
         student: student
     };
     const isActive = Boolean(student);
+
     return (
 
         <div className="content">
+
             <Header
                 disabled={!isActive}
-                onClick={isActive? e=>openModal('create', null) : null}/>
+                onClick={isActive? e=>openModal('create', null) : null}>
+                <Dropdown>
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        학생
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        {students.map(student=><Dropdown.Item>{student.name}</Dropdown.Item>)}
+                    </Dropdown.Menu>
+                </Dropdown>
+            </Header>
             <Table striped bordered hover >
                 <thead>
                     <tr>

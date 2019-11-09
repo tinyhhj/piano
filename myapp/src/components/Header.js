@@ -8,7 +8,8 @@ const Header = (props) =>{
     };
     return (
         <header style={{display: 'flex', flexDirection: 'row-reverse'}}>
-            <Button style={style} {...props}>{`추가`}</Button>
+            <Button style={style} {...props}>{`+`}</Button>
+            {props.children}
         </header>
     );
 };

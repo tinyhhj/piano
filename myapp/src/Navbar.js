@@ -14,7 +14,10 @@ export default ()=> {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
-                    {student && student.role === 'TEACHER' && <Nav.Link href="/piano/teacher">학생관리</Nav.Link>}
+                    {/*{student && student.role === 'TEACHER' && <Nav.Link href="/piano/teacher">관리</Nav.Link>}*/}
+                    {student && student.role === 'TEACHER' && <Nav.Link href="/piano/teacher/students">학생관리</Nav.Link>}
+                    {student && student.role === 'TEACHER' && <Nav.Link href="/piano/teacher/tickets">등록관리</Nav.Link>}
+                    {student && student.role === 'TEACHER' && <Nav.Link href="/piano/teacher/lessons">강의관리</Nav.Link>}
                 </Nav>
                 {/*<Form inline>*/}
                 {/*    <FormControl type="text" placeholder="Search" className="mr-sm-2" />*/}
