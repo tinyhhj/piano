@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
 public class CommonLoggingFilter extends CommonsRequestLoggingFilter {
-    ThreadLocal<Long> executionTime = ThreadLocal.withInitial(()->0L);
+    private static ThreadLocal<Long> executionTime = ThreadLocal.withInitial(()->0L);
     @Override
     protected boolean shouldLog(HttpServletRequest request) {
         return !MediaType.MULTIPART_FORM_DATA_VALUE.equals(request.getContentType());
