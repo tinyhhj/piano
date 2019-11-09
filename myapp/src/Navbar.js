@@ -10,7 +10,7 @@ export default ()=> {
     },[])
 
     return (<Navbar bg="light" expand="lg">
-            <Navbar.Brand href="/">조은비 교실</Navbar.Brand>
+            <Navbar.Brand href="/piano">조은비 교실</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="mr-auto">
