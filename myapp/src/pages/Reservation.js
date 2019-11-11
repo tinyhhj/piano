@@ -1,12 +1,15 @@
 import React , {useEffect, useState, useContext} from 'react';
 import {Table} from "react-bootstrap";
-import {Context,Slot, CommonUtil} from '../components';
+import {Context,Slot, CommonUtil,Modal} from '../components';
 import {ReservationApi, StudentApi} from "../api";
+
 
 const Reservations = () => {
     const host = useContext(Context);
+    const [reservation, setReservation] = useState(null);
     const [reservations, setReservations] = useState([]);
     const [ student, setStudent] = useState({});
+    const [show, setShow] = useState(false);
     const appendZero = CommonUtil.appendZero;
     const addDays = CommonUtil.addDay;
     const today = new Date().atStartOfDay();
@@ -15,7 +18,10 @@ const Reservations = () => {
     const thisWeeks = [...Array(7)].map((v,i)=>CommonUtil.addDay(today,i));
     const weekNames = ['일요일','월요일', '화요일','수요일','목요일','금요일','토요일'];
 
-    const renderReservations = reservations =>setReservations(reservations);
+    const renderReservations = reservations =>{
+        setShow(false);
+        setReservations(reservations);
+    };
     const getReservations = ()=>ReservationApi.getReservations(host, renderReservations);
     const getReservationsInHour = day => reservations
         .find(reservation=> {
@@ -60,11 +66,17 @@ const Reservations = () => {
     const makeReservation = datetime => {
         ReservationApi.addReservation(host, {studentId: student.id, reservationTime: datetime},getReservations);
     }
-
+    logger.debug("student: ", student);
     const clickHandler = e => {
         e.preventDefault();
         e.stopPropagation();
         if( e.target.dataset.reservation) {
+            if(student.role === 'TEACHER' && e.target.dataset.mine === 'false') {
+                logger.debug("here");
+                setShow(true);
+                setReservation(e.target.dataset.reservation);
+                return;
+            }
             ReservationApi.deleteReservation(host, {studentId: student.id, reservationId: e.target.dataset.reservation}, getReservations)
             return;
         }
@@ -74,9 +86,16 @@ const Reservations = () => {
         }, e.target.dataset.key)
     }
 
+    const onHide = ()=> {
+        getReservations();
+    }
+    const onOk = reservationId=> {
+        ReservationApi.deleteReservation(host, {reservationId: reservation}, getReservations);
+    }
 
 
     return (
+        <>
         <Table striped bordered hover >
             <thead>
             <tr>
@@ -96,6 +115,8 @@ const Reservations = () => {
             {timetable}
             </tbody>
         </Table>
+        <Modal {...{show: show,onHide: onHide,type:'alert',onOk:onOk,body:'삭제하시겠습니까?',header:'삭제'}}></Modal>
+        </>
     );
 };
 export default Reservations;

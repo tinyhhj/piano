@@ -10,6 +10,7 @@ import com.eunbi.PianoClass.exception.UnAuthorizationException;
 import com.eunbi.PianoClass.exception.ResourceNotFoundException;
 import com.eunbi.PianoClass.repository.ReservationRepository;
 import com.eunbi.PianoClass.repository.StudentRepository;
+import com.eunbi.PianoClass.service.StudentDetails;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -81,8 +82,15 @@ public class ReservationController {
     @DeleteMapping("/students/{studentId}/reservations/{id}")
     ResponseEntity<?> deleteReservation(@PathVariable String studentId, @PathVariable String id) {
         log.debug("[{}] [{}] [{}] - studentId: {} reservationId: {}","reservation",UserUtil.getUser().getUsername(),"delete", studentId, id);
-        Reservation reservation = Optional.ofNullable(reservationRepository.findByStudentIdAndId(studentId, id))
-                .orElseThrow(()->new ResourceNotFoundException("not found reservation studentId: "+ studentId + " reservationId: " +id));
+        Reservation reservation;
+        if( ((StudentDetails) UserUtil.getUser()).getStudent().isTeacher()) {
+            reservation = reservationRepository.findById(id)
+                    .orElseThrow(()->new ResourceNotFoundException("not found reservation studentId: "+ studentId + " reservationId: " +id));
+        } else {
+            reservation = Optional.ofNullable(reservationRepository.findByStudentIdAndId(studentId, id))
+                    .orElseThrow(()->new ResourceNotFoundException("not found reservation studentId: "+ studentId + " reservationId: " +id));
+        }
+
         reservationRepository.deleteById(reservation.getId());
         return ResponseEntity.ok(null);
     }
