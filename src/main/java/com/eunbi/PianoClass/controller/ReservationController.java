@@ -102,13 +102,19 @@ public class ReservationController {
         LocalDateTime end = now.plusDays(7).atTime(5,59);
         User user = Optional.ofNullable(UserUtil.getUser())
                 .orElseThrow(()->new UnAuthorizationException("unAuthorization"));
+        boolean isTeacher = ((StudentDetails) user).getStudent().isTeacher();
+        String[] ignoreProperties= new String[0];
+        if( !isTeacher) {
+            ignoreProperties = new String[]{"student"};
+        }
         log.debug("[{}] [{}] [{}] - from: {} to: {}","reservation",UserUtil.getUser().getUsername(),"find", start, end);
         List<Reservation> reservations = reservationRepository.findAllByReservationTimeBetween(start,end);
+        String[] finalIgnoreProperties = ignoreProperties;
         reservations = reservations
                 .stream()
                 .map(reservation -> {
                     ReservationResponse rv = new ReservationResponse();
-                    BeanUtils.copyProperties(reservation, rv, "student");
+                    BeanUtils.copyProperties(reservation, rv, finalIgnoreProperties);
                     rv.setMine(user.getUsername().equals(reservation.getStudent().getLogin()));
                     return rv;
                 })

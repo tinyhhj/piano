@@ -42,7 +42,13 @@ const Reservations = () => {
 
     const oneRow = (time, reservations) => <tr key={time}>
         <th>{`${appendZero(time% 24)}:00-${appendZero((time+1)%24)}:00`}</th>
-        {reservations.map((reservation,day)=> reservation? <Slot data-reservation ={reservation.id} data-key={`${day}:${time}`} key={day} mine={reservation.mine} reserved={true}></Slot>: <Slot data-key={`${day}:${time}`} key={day}></Slot>)}
+        {reservations.map((reservation,day)=> reservation? <Slot data-reservation ={reservation.id}
+                                                                 data-key={`${day}:${time}`}
+                                                                 key={day}
+                                                                 mine={reservation.mine}
+                                                                 reserved={true}>
+            {student.teacher ? reservation.mine? '': reservation.student.name:''}
+        </Slot>: <Slot data-key={`${day}:${time}`} key={day}></Slot>)}
     </tr>;
     let hour = 6;
     const getReservationDay = reservation => new Date(reservation.reservationTime).getDay()-1 < 0 ? 6 : new Date(reservation.reservationTime).getDay()-1;
