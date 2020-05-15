@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  yt_web_down:
+    container_name: yt_web_down
+    build: 
+        context: ../yt_web_down
+        dockerfile: Dockerfile
+    ports:
+      - 8082:8080
+networks:
+  default:
+    external:
+      name: piano_default
+
+

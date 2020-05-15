@@ -8,10 +8,11 @@ services:
     ports:
       - 80:80
     volumes:
-      - /media/tinyhhj/HD-E1:/media/webdav
+      - /media/tinyhhj/hdd:/webdav/webdav/media
+      - ../:/webdav/webdav/dev
     environment:
-      USERNAME: tinyhhj
-      PASSWORD: Samsung*99
+      USERNAME: (tinyhhj guest)
+      PASSWORD: (admin guest) 
     depends_on:
       - application
 
